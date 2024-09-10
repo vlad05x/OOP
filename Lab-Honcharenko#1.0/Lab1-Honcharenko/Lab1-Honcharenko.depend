@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1725906618 source:/home/vlad05x/DevZone/University/oop/Lab1-Honcharenko/main.cpp
+	<iostream>
+	<string>
+
