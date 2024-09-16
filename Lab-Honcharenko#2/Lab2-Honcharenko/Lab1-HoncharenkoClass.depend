@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1725907026 source:/home/vlad05x/DevZone/University/oop/Lab1-HoncharenkoClass/BankAccount.cpp
+	"BankAccount.h"
+	<iostream>
+
+1725957670 /home/vlad05x/DevZone/University/oop/Lab1-HoncharenkoClass/BankAccount.h
+	<string>
+
+1725958098 source:/home/vlad05x/DevZone/University/oop/Lab1-HoncharenkoClass/main.cpp
+	"BankAccount.h"
+	<iostream>
+
+1726401950 source:/home/vlad05x/DevZone/University/oop/OOP/Lab-Honcharenko#2/Lab2-Honcharenko/main.cpp
+	"BankAccount.h"
+	<iostream>
+
+1726420279 /home/vlad05x/DevZone/University/oop/OOP/Lab-Honcharenko#2/Lab2-Honcharenko/BankAccount.h
+	<string>
+	<iostream>
+
