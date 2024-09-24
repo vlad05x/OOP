@@ -1,14 +1,15 @@
 #include "Vector.h"
 // Конструктор приймаэ розмір вектора n
 Vector::Vector(int n) : size(n) {
+//Налаштування вектора компонентів
     components.resize(n, 0.0);
 }
-
+// Конструктор за вектором компонентів
 Vector::Vector(const std::vector<double>& components) : components(components), size(components.size()) {}
 
 Vector::Vector(const Vector& other) : components(other.components), size(other.size) {}
 
-// Вичесление длини вектора
+// Метод обчислення довжини вектора
 double Vector::magnitude() const {
     double sum = 0;
     for (double comp : components) {
@@ -53,6 +54,7 @@ Vector Vector::multiplyByConstant(double scalar) const {
 bool Vector::isCollinear(const Vector& other) const {
     double ratio = components[0] / other.components[0];
     for (int i = 1; i < size; ++i) {
+        // Обчислення їх відношення
         if (components[i] / other.components[i] != ratio) {
             return false;
         }
@@ -76,6 +78,8 @@ void Vector::display() const {
     std::cout << ")\n";
 }
 
+
+// Метод перевантажує оператор присвоєння
 Vector& Vector::operator=(const Vector& other) {
     if (this != &other) {
         components = other.components;
