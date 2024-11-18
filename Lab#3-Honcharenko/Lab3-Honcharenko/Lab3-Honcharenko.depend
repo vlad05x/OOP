@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1728982842 source:/home/vlad05x/DevZone/University/oop/OOP/Lab3-Honcharenko/Lab3-Honcharenko/main.cpp
+	"Library.h"
+
+1729500382 /home/vlad05x/DevZone/University/oop/OOP/Lab3-Honcharenko/Lab3-Honcharenko/Library.h
+	<iostream>
+	<string>
+	<vector>
+

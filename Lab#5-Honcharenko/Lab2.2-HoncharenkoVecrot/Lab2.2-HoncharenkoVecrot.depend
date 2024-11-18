@@ -1,0 +1,22 @@
+# depslib dependency file v1.0
+1726487191 source:/home/vlad05x/DevZone/University/oop/OOP/Lab-Honcharenko#2/Lab2.2-HoncharenkoVecrot/main.cpp
+	"Vector.h"
+	<iostream>
+
+1727167607 /home/vlad05x/DevZone/University/oop/OOP/Lab-Honcharenko#2/Lab2.2-HoncharenkoVecrot/Vector.h
+	<iostream>
+	<cmath>
+	<vector>
+
+1726487494 source:/home/vlad05x/DevZone/University/oop/OOP/Lab-Honcharenko#2/Lab2.2-HoncharenkoVecrot/Vector.cpp
+	"Vector.h"
+
+1731785803 source:/home/vlad05x/DevZone/University/oop/OOP/Lab#6-Honcharenko/Lab2.2-HoncharenkoVecrot/main.cpp
+	"Vector.h"
+	<iostream>
+
+1731784660 /home/vlad05x/DevZone/University/oop/OOP/Lab#6-Honcharenko/Lab2.2-HoncharenkoVecrot/Vector.h
+	<iostream>
+	<cmath>
+	<vector>
+
