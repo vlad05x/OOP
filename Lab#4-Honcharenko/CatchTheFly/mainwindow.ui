@@ -59,7 +59,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>Кактус.png</pixmap>
+     <pixmap>cactus.png</pixmap>
     </property>
    </widget>
    <widget class="QLabel" name="l_cactus_2">
@@ -75,7 +75,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>Кактус.png</pixmap>
+     <pixmap>cactus.png</pixmap>
     </property>
    </widget>
    <widget class="QLabel" name="l_cactus_3">
@@ -91,7 +91,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>Кактус.png</pixmap>
+     <pixmap>cactus.png</pixmap>
     </property>
    </widget>
    <widget class="QLabel" name="l_cactus_4">
@@ -107,7 +107,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>Кактус.png</pixmap>
+     <pixmap>cactus.png</pixmap>
     </property>
    </widget>
    <widget class="QLabel" name="l_cactus_5">
@@ -123,7 +123,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>Кактус.png</pixmap>
+     <pixmap>cactus.png</pixmap>
     </property>
    </widget>
    <widget class="QLabel" name="l_cactus_6">
@@ -139,7 +139,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>Кактус.png</pixmap>
+     <pixmap>cactus.png</pixmap>
     </property>
    </widget>
    <widget class="QLabel" name="l_cactus_7">
@@ -155,7 +155,55 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>Кактус.png</pixmap>
+     <pixmap>cactus.png</pixmap>
+    </property>
+   </widget>
+   <widget class="QLabel" name="l_fly2">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>410</y>
+      <width>61</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>fly2.png</pixmap>
+    </property>
+   </widget>
+   <widget class="QLabel" name="l_fly3">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>450</y>
+      <width>61</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>fly3.png</pixmap>
+    </property>
+   </widget>
+   <widget class="QLabel" name="l_window">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>450</y>
+      <width>91</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>window.png</pixmap>
     </property>
    </widget>
   </widget>

@@ -2,96 +2,138 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <QPixmap>
+#include <QVector>
+#include <cmath>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-{
+    : QMainWindow(parent), ui(new Ui::MainWindow), currentFly(nullptr), currentLevel(1), escapeWindow(nullptr) {
     ui->setupUi(this);
 
-    QPixmap flyPixmap("/home/vlad05x/DevZone/University/oop/OOP/Lab#4-Honcharenko/CatchTheFly/fly.png");
-    flyPixmap = flyPixmap.scaled(80, 80, Qt::KeepAspectRatio);
-    ui->l_fly->setPixmap(flyPixmap);
-
     QPixmap trapPixmap("/home/vlad05x/DevZone/University/oop/OOP/Lab#4-Honcharenko/CatchTheFly/trap.png");
-    trapPixmap = trapPixmap.scaled(100, 100, Qt::KeepAspectRatio);
-    ui->l_trap->setPixmap(trapPixmap);
+    ui->l_trap->setPixmap(trapPixmap.scaled(100, 100, Qt::KeepAspectRatio));
 
-    QPixmap trapCactusPixmap("/home/vlad05x/DevZone/University/oop/OOP/Lab#4-Honcharenko/CatchTheFly/cactus.png");
-    trapCactusPixmap = trapCactusPixmap.scaled(80, 80, Qt::KeepAspectRatio);
-
-    cactus = {ui->l_cactus, ui->l_cactus_2, ui->l_cactus_3, ui->l_cactus_4, ui->l_cactus_5, ui->l_cactus_6, ui->l_cactus_7};
-    for (QLabel* cact : cactus) {
-        cact->setPixmap(trapCactusPixmap);
+    QPixmap cactusPixmap("/home/vlad05x/DevZone/University/oop/OOP/Lab#4-Honcharenko/CatchTheFly/cactus.png");
+    cactusLabels = {ui->l_cactus, ui->l_cactus_2, ui->l_cactus_3, ui->l_cactus_4, ui->l_cactus_5, ui->l_cactus_6, ui->l_cactus_7};
+    for (auto cactus : cactusLabels) {
+        cactus->setPixmap(cactusPixmap.scaled(80, 80, Qt::KeepAspectRatio));
     }
 
-    resetGame();
+    flyTimer = new QTimer(this);
+    connect(flyTimer, &QTimer::timeout, this, &MainWindow::moveFlyTowardsWindow);
+
+    initGame();
 }
 
 MainWindow::~MainWindow() {
+    delete currentFly;
+    delete flyTimer;
     delete ui;
 }
 
-void MainWindow::resetGame() {
+void MainWindow::initGame() {
+    currentLevel = 3;
+    startLevel(currentLevel);
+}
+
+void MainWindow::startLevel(int level) {
+    delete currentFly;
+    delete escapeWindow;
+
+    if (level == 1) {
+        currentFly = new Fly(ui->l_fly, 15, "/home/vlad05x/DevZone/University/oop/OOP/Lab#4-Honcharenko/CatchTheFly/fly.png");
+    } else if (level == 2) {
+        if (!escapeWindow) {
+            escapeWindow = new QLabel(this);
+            escapeWindow->setGeometry(620, 450, 100, 100);
+            QPixmap windowPixmap("/home/vlad05x/DevZone/University/oop/OOP/Lab#4-Honcharenko/CatchTheFly/window.png");
+            windowPixmap = windowPixmap.scaled(escapeWindow->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            escapeWindow->setPixmap(windowPixmap);
+            escapeWindow->show();
+        }
+        currentFly = new FlyLevel2(ui->l_fly, 25, escapeWindow->geometry());
+        flyTimer->start(50);
+    } else if (level == 3) {
+        if (!escapeWindow) {
+            escapeWindow = new QLabel(this);
+            escapeWindow->setGeometry(620, 450, 100, 100);
+            QPixmap windowPixmap("/home/vlad05x/DevZone/University/oop/OOP/Lab#4-Honcharenko/CatchTheFly/window.png");
+            escapeWindow->setPixmap(windowPixmap.scaled(escapeWindow->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            escapeWindow->show();
+        }
+        currentFly = new FlyLevel3(ui->l_fly, 35, escapeWindow->geometry());
+        currentFly->changeSkin("/home/vlad05x/DevZone/University/oop/OOP/Lab#4-Honcharenko/CatchTheFly/fly3.png");
+        flyTimer->start(30);
+    } else {
+        QMessageBox::information(this, "Congratulations!", "You have passed all levels!");
+        initGame();
+        return;
+    }
+
     ui->l_fly->move(50, 400);
 }
 
-bool MainWindow::event(QEvent *event)
-{
+void MainWindow::resetGame() {
+    flyTimer->stop();
+    currentLevel = 1;
+    startLevel(currentLevel);
+}
+
+void MainWindow::moveFlyTowardsWindow() {
+    if (!escapeWindow) return;
+
+    QPoint flyPos = ui->l_fly->pos();
+    QPoint windowCenter = escapeWindow->geometry().center();
+
+    int dx = windowCenter.x() - flyPos.x();
+    int dy = windowCenter.y() - flyPos.y();
+    double distance = sqrt(dx * dx + dy * dy);
+
+    int step = 5;
+    if (distance > step) {
+        flyPos.setX(flyPos.x() + static_cast<int>(step * dx / distance));
+        flyPos.setY(flyPos.y() + static_cast<int>(step * dy / distance));
+        ui->l_fly->move(flyPos);
+    }
+
+    if (isFlyInWindow()) {
+        flyTimer->stop();
+        QMessageBox::critical(this, "You lose!", "The fly has escaped!");
+        resetGame();
+    }
+}
+
+bool MainWindow::event(QEvent* event) {
     if (event->type() == QEvent::MouseMove) {
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-        moveFly(mouseEvent->pos());
+        auto* mouseEvent = static_cast<QMouseEvent*>(event);
+        currentFly->moveAwayFromCursor(mouseEvent->pos(), this->geometry());
+
+        if (isFlyInTrap()) {
+            flyTimer->stop();
+            QMessageBox::information(this, "Congratulations!", "The fly is in the trap!");
+            startLevel(++currentLevel);
+        } else if (isFlyInCactus()) {
+            flyTimer->stop();
+            QMessageBox::critical(this, "You lose!", "The fly hit a cactus!");
+            resetGame();
+        }
     }
     return QMainWindow::event(event);
 }
 
-void MainWindow::moveFly(QPoint cursorPos) {
-    QPoint flyPos = ui->l_fly->pos();
-    int dx = flyPos.x() - cursorPos.x();
-    int dy = flyPos.y() - cursorPos.y();
-
-    if (abs(dx) < 20 && abs(dy) < 100) {
-        int newX = flyPos.x() + (dx > 0 ? 10 : -10);
-        int newY = flyPos.y() + (dy > 0 ? 10 : -10);
-
-        QRect windowRect = this->geometry();
-        QRect flyRect = ui->l_fly->geometry();
-
-        if (newX < 0) newX = 0;
-
-        if (newX + flyRect.width() > windowRect.width())
-            newX = windowRect.width() - flyRect.width();
-
-        if (newY < 0) newY = 0;
-        if (newY + flyRect.height() > windowRect.height())
-            newY = windowRect.height() - flyRect.height();
-
-        ui->l_fly->move(newX, newY);
-    }
-
-
-    if (isFlyInTrap()) {
-        QMessageBox::information(this, "You are win!!!", "Fly in trap!!!");
-        resetGame();
-    } else if (isFlyInCactus()) {
-        QMessageBox::critical(this, "You lose!", "Fly hit a cactus!");
-        resetGame();
-    }
-}
-
 bool MainWindow::isFlyInTrap() {
-    QRect flyRect = ui->l_fly->geometry();
-    QRect trapRect = ui->l_trap->geometry();
-    return trapRect.contains(flyRect.center());
+    return ui->l_trap->geometry().contains(ui->l_fly->geometry().center());
 }
 
 bool MainWindow::isFlyInCactus() {
-    QRect flyRect = ui->l_fly->geometry();
-    for (QLabel* cactusLabel : cactus) {
-        QRect cactusRect = cactusLabel->geometry();
-        if (cactusRect.contains(flyRect.center())) {
+    for (auto cactus : cactusLabels) {
+        if (cactus->geometry().contains(ui->l_fly->geometry().center())) {
             return true;
         }
     }
     return false;
+}
+
+bool MainWindow::isFlyInWindow() {
+    if (!escapeWindow) return false;
+    return escapeWindow->geometry().contains(ui->l_fly->geometry().center());
 }
